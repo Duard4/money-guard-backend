@@ -1,0 +1,20 @@
+type: object
+required:
+  - name
+  - email
+  - password
+properties:
+  name:
+    type: string
+    description: User's name
+    example: John Barrer
+  email:
+    type: string
+    format: email
+    description: User's unique email address
+    example: john@example.com
+  password:
+    type: string
+    format: password
+    description: User's password
+    example: qwerty12345

@@ -1,0 +1,54 @@
+type: object
+required:
+  - userId
+  - sum
+  - type
+  - category
+  - date
+properties:
+  userId:
+    description: 'User id'
+    type: string
+    example: 65e4decdd286b30065d54af9
+  sum:
+    description: 'Transaction sum'
+    type: number
+    example: 100
+  type:
+    description: 'Type transaction'
+    type: string
+    enum: ['income', 'expense']
+  category:
+    description: 'Category transaction'
+    type: string
+    enum:
+      [
+        'Incomes',
+        'Main expenses',
+        'Products',
+        'Car',
+        'Self care',
+        'Child care',
+        'Household products',
+        'Education',
+        'Leisure',
+        'Other expenses',
+        'Entertainment',
+      ]
+  comment:
+    description: 'Comment transaction'
+    type: string
+    example: Comment transaction
+  date:
+    description: 'Date transaction'
+    type: string
+    format: date-time
+  createdAt:
+    type: string
+    description: Contact created Date
+    example: 2025-04-09T10:54:04.582+00:00
+  updatedAt:
+    type: string
+    format: date-time
+    description: Contact updated Date
+    example: 2025-04-09T10:54:04.582+00:00
