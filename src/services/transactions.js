@@ -205,7 +205,7 @@ export const getMonthlySummary = async (userId, month, year) => {
   const transactions = await TransactionsCollection.aggregate([
     {
       $match: {
-        userId,
+        userId: String(userId),
         date: {
           $gte: startDate,
           $lt: endDate,
@@ -214,13 +214,49 @@ export const getMonthlySummary = async (userId, month, year) => {
     },
     {
       $group: {
-        _id: '$category',
+        _id: {
+          type: '$type',
+          category: '$category',
+        },
         total: { $sum: '$sum' },
       },
     },
   ]);
+  const summary = {
+    income: {},
+    expense: {},
+    totalIncome: 0,
+    totalExpense: 0,
+  };
 
-  return transactions;
+  transactions.forEach((trans) => {
+    const { type, category } = trans._id;
+    if (type === 'income') {
+      if (!summary.income[category]) {
+        summary.income[category] = 0;
+      }
+      summary.income[category] += trans.total;
+      summary.totalIncome += trans.total;
+    } else if (type === 'expense') {
+      if (!summary.expense[category]) {
+        summary.expense[category] = 0;
+      }
+      summary.expense[category] += trans.total;
+      summary.totalExpense += trans.total;
+    }
+  });
+  console.log('Found transactions:', transactions.length);
+  console.log(transactions);
+
+  const balance = summary.totalIncome - summary.totalExpense;
+
+  return {
+    income: summary.income,
+    expense: summary.expense,
+    totalIncome: summary.totalIncome,
+    totalExpense: summary.totalExpense,
+    balance,
+  };
 };
 
 // expenses and incomes total count ()
