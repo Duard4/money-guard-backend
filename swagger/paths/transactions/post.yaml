@@ -1,0 +1,55 @@
+tags:
+  - Transactions
+summary: Create a new transaction
+description: Creates a new income or expense transaction for the authenticated user.
+operationId: createTransaction
+security:
+  - bearerAuth: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: ../../components/schemas/transaction.yaml
+responses:
+  '201':
+    description: Successfully created a transaction
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: Successfully created a transaction!
+            data:
+              $ref: ../../components/schemas/transaction.yaml
+  '400':
+    description: Invalid input
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 400
+            message:
+              type: string
+              example: Not enough balance or invalid category
+  '404':
+    description: User not found
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: User not found

@@ -10,6 +10,7 @@ properties:
     description: 'User id'
     type: string
     example: 65e4decdd286b30065d54af9
+    readOnly: true
   sum:
     description: 'Transaction sum'
     type: number
@@ -47,8 +48,10 @@ properties:
     type: string
     description: Contact created Date
     example: 2025-04-09T10:54:04.582+00:00
+    readOnly: true
   updatedAt:
     type: string
     format: date-time
     description: Contact updated Date
     example: 2025-04-09T10:54:04.582+00:00
+    readOnly: true

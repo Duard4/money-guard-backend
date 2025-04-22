@@ -1,2 +1,115 @@
 tags:
   - Transactions
+summary: Get all transactions
+operationId: getTransactions
+description: >
+  Returns a paginated and filtered list of transactions for the authenticated user.
+parameters:
+  - in: query
+    name: page
+    schema:
+      type: integer
+      default: 1
+    description: Page number
+  - in: query
+    name: perPage
+    schema:
+      type: integer
+      default: 10
+    description: Number of items per page
+  - in: query
+    name: sortBy
+    schema:
+      type: string
+      enum: [date, sum, type, category]
+      default: date
+    description: Field to sort by
+  - in: query
+    name: sortOrder
+    schema:
+      type: string
+      enum: [asc, desc]
+      default: asc
+    description: Sort order
+  - in: query
+    name: minSum
+    schema:
+      type: number
+    description: Minimum transaction sum
+  - in: query
+    name: maxSum
+    schema:
+      type: number
+    description: Maximum transaction sum
+  - in: query
+    name: type
+    schema:
+      type: string
+      enum: [income, expense]
+    description: Transaction type
+  - in: query
+    name: category
+    schema:
+      type: string
+    description: Transaction category
+  - in: query
+    name: startDate
+    schema:
+      type: string
+      format: date
+    description: Start date for filtering
+  - in: query
+    name: endDate
+    schema:
+      type: string
+      format: date
+    description: End date for filtering
+  - in: query
+    name: comment
+    schema:
+      type: string
+    description: Filter by comment content
+responses:
+  '200':
+    description: Transactions fetched successfully
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully fetched transactions!
+            data:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: ../../components/schemas/transaction.yaml
+                totalItems:
+                  type: object
+                  properties:
+                    page:
+                      type: integer
+                      example: 1
+                    perPage:
+                      type: integer
+                      example: 10
+                    total:
+                      type: integer
+                      example: 25
+                totalPages:
+                  type: integer
+                  example: 3
+                hasNextPage:
+                  type: boolean
+                  example: true
+                hasPreviousPage:
+                  type: boolean
+                  example: false
+  '401':
+    $ref: ../../components/responses/401.yaml
