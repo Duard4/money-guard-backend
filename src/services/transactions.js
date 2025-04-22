@@ -187,15 +187,13 @@ export const deleteTransaction = async (userId, transactionId) => {
 };
 
 /**
- * actually now it returns nothing, your task is to fix and improve it.
- * also you are welcome to add any other methods you think are useful
- * you may change other files as well, but notify me about it
- *
- * @param {*} userId
- * @param {*} month
- * @param {*} year
- * @returns
- */
+ * getMonthlySummary retrieves the monthly summary of transactions for a user.
+ * It calculates the total income and expense for each category and the overall balance.
+ * @param {string} userId - The ID of the user.
+ * @param {string} month - The month for which to retrieve the summary (1-12).
+ * @param {string} year - The year for which to retrieve the summary (YYYY).
+ * @returns {Promise<object>} - An object containing the monthly summary.
+ * */
 export const getMonthlySummary = async (userId, month, year) => {
   const startDate = new Date(`${year}-${month}-01`);
   const endDate = new Date(
@@ -258,6 +256,3 @@ export const getMonthlySummary = async (userId, month, year) => {
     balance,
   };
 };
-
-// expenses and incomes total count ()
-// balance ???

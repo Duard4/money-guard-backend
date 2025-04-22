@@ -1,11 +1,10 @@
 import { ONE_DAY } from '../constants/index.js';
 import {
+  getUserInfo,
   loginUser,
   logoutUser,
   refreshUsersSession,
   registerUser,
-  // requestResetToken,
-  // resetPassword,
 } from '../services/auth.js';
 
 export const registerUserController = async (req, res) => {
@@ -78,20 +77,13 @@ export const refreshUserSessionController = async (req, res) => {
   });
 };
 
-// export const requestResetEmailController = async (req, res) => {
-//   await requestResetToken(req.body.email);
-//   res.json({
-//     message: 'Reset password email was successfully sent!',
-//     status: 200,
-//     data: {},
-//   });
-// };
+export const getUserInfoController = async (req, res) => {
+  const userId = req.user._id;
+  const user = await getUserInfo(userId);
 
-// export const resetPasswordController = async (req, res) => {
-//   await resetPassword(req.body);
-//   res.json({
-//     message: 'Password was successfully reset!',
-//     status: 200,
-//     data: {},
-//   });
-// };
+  res.json({
+    status: 200,
+    message: 'Successfully fetched user info!',
+    data: user,
+  });
+};
