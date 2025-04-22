@@ -10,7 +10,7 @@ requestBody:
   content:
     application/json:
       schema:
-        $ref: ../../components/schemas/transaction.yaml
+        $ref: ../../components/schemas/modelTransaction.yaml
 responses:
   '201':
     description: Successfully created a transaction
@@ -26,8 +26,8 @@ responses:
               type: string
               example: Successfully created a transaction!
             data:
-              $ref: ../../components/schemas/transaction.yaml
-  '400':
+              $ref: ../../components/schemas/modelTransaction.yaml
+  '500':
     description: Invalid input
     content:
       application/json:
@@ -36,10 +36,13 @@ responses:
           properties:
             status:
               type: integer
-              example: 400
+              example: 500
             message:
               type: string
-              example: Not enough balance or invalid category
+              example: Something went wrong
+            data:
+              type: string
+              example: Not enought balance
   '404':
     description: User not found
     content:

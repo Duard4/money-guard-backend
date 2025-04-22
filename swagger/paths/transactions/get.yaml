@@ -89,7 +89,7 @@ responses:
                 data:
                   type: array
                   items:
-                    $ref: ../../components/schemas/transaction.yaml
+                    $ref: ../../components/schemas/modelTransaction.yaml
                 totalItems:
                   type: object
                   properties:
