@@ -13,6 +13,7 @@ import {
   getMonthlySummaryController,
 } from '../controllers/transactions.js';
 import { authenticate } from '../middlewares/authenticate.js';
+import { checkTransactionAccess } from '../middlewares/checkTransactionAccess.js';
 
 const router = Router();
 router.use(authenticate);
@@ -25,11 +26,15 @@ router.post(
 );
 router.patch(
   '/:transactionId',
-  // checkTransactionAccess,
+  checkTransactionAccess,
   validateBody(updateTransactionSchema),
   ctrlWrapper(updateTransactionController),
 );
-router.delete('/:transactionId', ctrlWrapper(deleteTransactionController));
+router.delete(
+  '/:transactionId',
+  checkTransactionAccess,
+  ctrlWrapper(deleteTransactionController),
+);
 router.get('/summary', ctrlWrapper(getMonthlySummaryController));
 
 export default router;
