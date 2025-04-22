@@ -1,0 +1,14 @@
+type: object
+properties:
+  avatar:
+    type: string
+    example: https://example.com/avatar.jpg
+  name:
+    type: string
+    example: John Berrer
+  balance:
+    type: number
+    example: 2000
+required:
+  - name
+  - balance

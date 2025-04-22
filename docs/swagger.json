@@ -12,6 +12,9 @@
   "servers": [
     {
       "url": "http://127.0.0.1:3000"
+    },
+    {
+      "url": "https://money-guard-backend-lnfk.onrender.com/"
     }
   ],
   "tags": [
@@ -302,6 +305,69 @@
                     "message": {
                       "type": "string",
                       "example": "Session token expired"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/current": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Get user info",
+        "description": "Returns the avatar, name, and balance of the authenticated user",
+        "operationId": "getUserInfo",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully fetched user info",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully fetched user info!"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/userInfo"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User not found"
                     }
                   }
                 }
@@ -1004,6 +1070,27 @@
             "example": "qwerty12345"
           }
         }
+      },
+      "userInfo": {
+        "type": "object",
+        "properties": {
+          "avatar": {
+            "type": "string",
+            "example": "https://example.com/avatar.jpg"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Berrer"
+          },
+          "balance": {
+            "type": "number",
+            "example": 2000
+          }
+        },
+        "required": [
+          "name",
+          "balance"
+        ]
       },
       "modelTransaction": {
         "type": "object",

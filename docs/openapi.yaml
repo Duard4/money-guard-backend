@@ -28,6 +28,9 @@ paths:
   /auth/refresh:
     post:
       $ref: ../swagger/paths/auth/refresh.yaml
+  /auth/current:
+    get:
+      $ref: ../swagger/paths/auth/getInfo.yaml
   /transactions:
     get:
       $ref: ../swagger/paths/transactions/get.yaml
