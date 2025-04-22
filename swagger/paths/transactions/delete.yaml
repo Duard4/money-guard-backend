@@ -1,0 +1,43 @@
+tags:
+  - Transactions
+summary: Delete a transaction
+description: Deletes a transaction belonging to the authenticated user and adjusts balance accordingly.
+operationId: deleteTransaction
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: transactionId
+    required: true
+    schema:
+      type: string
+    description: ID of the transaction to delete
+responses:
+  '204':
+    description: Transaction successfully deleted (no content)
+  '404':
+    description: User or transaction not found
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: Transaction not found
+  '400':
+    description: Invalid input
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 400
+            message:
+              type: string
+              example: Bad request

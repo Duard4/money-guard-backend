@@ -1,0 +1,61 @@
+tags:
+  - Auth
+summary: Refresh user session
+operationId: refreshUserSession
+description: >
+  Refreshes the user session using cookies `sessionId` and `refreshToken`, returns a new access token.
+security:
+  - bearerAuth: []
+parameters:
+  - in: cookie
+    name: sessionId
+    required: true
+    schema:
+      type: string
+  - in: cookie
+    name: refreshToken
+    required: true
+    schema:
+      type: string
+responses:
+  '200':
+    description: Session refreshed successfully
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully refreshed a session!
+            data:
+              type: object
+              required:
+                - accessToken
+              properties:
+                accessToken:
+                  type: string
+                  example: MyeJuRjdczgBQBc5Fy941l8hk+vra5uChfBGrgSl
+  '401':
+    description: Session not found or token expired
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 401
+            message:
+              type: string
+              example: Session token expired

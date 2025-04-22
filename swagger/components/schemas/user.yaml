@@ -1,0 +1,34 @@
+type: object
+required:
+  - _id
+  - name
+  - email
+  - balance
+  - createdAt
+  - updatedAt
+properties:
+  _id:
+    type: string
+    format: objectId
+    example: 68065a2bd63a4fbb007f405b
+  name:
+    type: string
+    example: John Barrer
+  email:
+    type: string
+    format: email
+    example: john@example.com
+  balance:
+    type: number
+    example: 0
+  avatar:
+    type: string
+    example: https://example.com/images/avatar.jpg
+  createdAt:
+    type: string
+    format: date-time
+    example: 2025-04-21T14:46:03.450Z
+  updatedAt:
+    type: string
+    format: date-time
+    example: 2025-04-21T14:46:03.450Z

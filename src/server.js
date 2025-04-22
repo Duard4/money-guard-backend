@@ -1,17 +1,31 @@
+import * as fs from 'node:fs';
+
 import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import swaggerUIExpress from 'swagger-ui-express';
 import router from './routers/index.js';
 import { getEnvVar } from './utils/getEnvVar.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+import path from 'node:path';
 // import { UPLOAD_DIR } from './constants/index.js';
 
 const PORT = Number(getEnvVar('PORT', '3000'));
 
+const swaggerDocument = JSON.parse(
+  fs.readFileSync(path.resolve('docs', 'swagger.json'), 'utf-8'),
+);
+
 export const setupServer = () => {
   const app = express();
+
+  app.use(
+    '/api-docs',
+    swaggerUIExpress.serve,
+    swaggerUIExpress.setup(swaggerDocument),
+  );
 
   app.use(
     express.json({
