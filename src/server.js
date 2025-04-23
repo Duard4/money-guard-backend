@@ -32,7 +32,15 @@ export const setupServer = () => {
       limit: '100kb',
     }),
   );
-  app.use(cors());
+  app.use(
+    cors({
+      origin: [
+        'http://localhost:5173',
+        'https://money-guard-backend-lnfk.onrender.com',
+      ],
+      credentials: true,
+    }),
+  );
   app.use(cookieParser());
   app.use(
     pino({

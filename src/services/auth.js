@@ -85,9 +85,11 @@ export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
 };
 
 export const getUserInfo = async (userId) => {
-  const { avatar, name, balance } = await UsersCollection.findById(userId);
+  const { avatar, name, balance, email } = await UsersCollection.findById(
+    userId,
+  );
   if (!name) {
     throw createHttpError(404, 'User not found!');
   }
-  return { avatar, name, balance };
+  return { avatar, name, balance, email };
 };
