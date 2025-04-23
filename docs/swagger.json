@@ -12,6 +12,9 @@
   "servers": [
     {
       "url": "http://127.0.0.1:3000"
+    },
+    {
+      "url": "https://money-guard-backend-lnfk.onrender.com/"
     }
   ],
   "tags": [
@@ -65,7 +68,7 @@
                       "example": "Successfully registered a user!"
                     },
                     "data": {
-                      "$ref": "#/components/schemas/user"
+                      "$ref": "#/components/schemas/modelUser"
                     }
                   }
                 }
@@ -311,6 +314,69 @@
         }
       }
     },
+    "/auth/current": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Get user info",
+        "description": "Returns the avatar, name, and balance of the authenticated user",
+        "operationId": "getUserInfo",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully fetched user info",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully fetched user info!"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/userInfo"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/transactions": {
       "get": {
         "tags": [
@@ -451,7 +517,7 @@
                         "data": {
                           "type": "array",
                           "items": {
-                            "$ref": "#/components/schemas/transaction"
+                            "$ref": "#/components/schemas/modelTransaction"
                           }
                         },
                         "totalItems": {
@@ -512,7 +578,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/transaction"
+                "$ref": "#/components/schemas/modelTransaction"
               }
             }
           }
@@ -534,27 +600,7 @@
                       "example": "Successfully created a transaction!"
                     },
                     "data": {
-                      "$ref": "#/components/schemas/transaction"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 400
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Not enough balance or invalid category"
+                      "$ref": "#/components/schemas/modelTransaction"
                     }
                   }
                 }
@@ -575,6 +621,30 @@
                     "message": {
                       "type": "string",
                       "example": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 500
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Something went wrong"
+                    },
+                    "data": {
+                      "type": "string",
+                      "example": "Not enought balance"
                     }
                   }
                 }
@@ -675,7 +745,7 @@
                       "example": "Successfully updated a transaction!"
                     },
                     "data": {
-                      "$ref": "#/components/schemas/transaction"
+                      "$ref": "#/components/schemas/modelTransaction"
                     }
                   }
                 }
@@ -715,7 +785,16 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Transaction not found"
+                      "example": "NotFoundError"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Transaction not found or access denied"
+                        }
+                      }
                     }
                   }
                 }
@@ -928,7 +1007,7 @@
           }
         }
       },
-      "user": {
+      "modelUser": {
         "type": "object",
         "required": [
           "_id",
@@ -992,7 +1071,28 @@
           }
         }
       },
-      "transaction": {
+      "userInfo": {
+        "type": "object",
+        "properties": {
+          "avatar": {
+            "type": "string",
+            "example": "https://example.com/avatar.jpg"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Berrer"
+          },
+          "balance": {
+            "type": "number",
+            "example": 2000
+          }
+        },
+        "required": [
+          "name",
+          "balance"
+        ]
+      },
+      "modelTransaction": {
         "type": "object",
         "required": [
           "userId",

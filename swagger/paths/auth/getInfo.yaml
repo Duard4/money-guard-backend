@@ -1,0 +1,38 @@
+tags:
+  - Auth
+summary: Get user info
+description: Returns the avatar, name, and balance of the authenticated user
+operationId: getUserInfo
+security:
+  - bearerAuth: []
+responses:
+  '200':
+    description: Successfully fetched user info
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully fetched user info!
+            data:
+              $ref: '../../components/schemas/userInfo.yaml'
+  '401':
+    $ref: ../../components/responses/401.yaml
+  '404':
+    description: User not found
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: User not found

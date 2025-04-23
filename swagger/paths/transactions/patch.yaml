@@ -65,7 +65,7 @@ responses:
               type: string
               example: Successfully updated a transaction!
             data:
-              $ref: ../../components/schemas/transaction.yaml
+              $ref: ../../components/schemas/modelTransaction.yaml
   '400':
     description: Invalid input or insufficient balance
     content:
@@ -91,4 +91,10 @@ responses:
               example: 404
             message:
               type: string
-              example: Transaction not found
+              example: NotFoundError
+            data:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Transaction not found or access denied

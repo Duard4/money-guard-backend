@@ -26,7 +26,7 @@ responses:
               type: string
               example: Successfully registered a user!
             data:
-              $ref: ../../components/schemas/user.yaml
+              $ref: ../../components/schemas/modelUser.yaml
   '400':
     description: Email already in use
     content:
