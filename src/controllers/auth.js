@@ -10,10 +10,32 @@ import {
 export const registerUserController = async (req, res) => {
   const user = await registerUser(req.body);
 
+  const session = await loginUser({
+    email: req.body.email,
+    password: req.body.password,
+  });
+
+  res.cookie('refreshToken', session.refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'None',
+    expires: new Date(Date.now() + ONE_DAY),
+  });
+
+  res.cookie('sessionId', session._id, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'None',
+    expires: new Date(Date.now() + ONE_DAY),
+  });
+
   res.status(201).json({
     status: 201,
     message: 'Successfully registered a user!',
-    data: user,
+    data: {
+      user,
+      accessToken: session.accessToken,
+    },
   });
 };
 
@@ -22,10 +44,15 @@ export const loginUserController = async (req, res) => {
 
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
+    secure: true,
+    sameSite: 'None',
     expires: new Date(Date.now() + ONE_DAY),
   });
+
   res.cookie('sessionId', session._id, {
     httpOnly: true,
+    secure: true,
+    sameSite: 'None',
     expires: new Date(Date.now() + ONE_DAY),
   });
 
@@ -43,8 +70,17 @@ export const logoutUserController = async (req, res) => {
     await logoutUser(req.cookies.sessionId);
   }
 
-  res.clearCookie('sessionId');
-  res.clearCookie('refreshToken');
+  res.clearCookie('sessionId', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'None',
+  });
+
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'None',
+  });
 
   res.status(204).send();
 };
@@ -52,10 +88,15 @@ export const logoutUserController = async (req, res) => {
 const setupSession = (res, session) => {
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
+    secure: true,
+    sameSite: 'None',
     expires: new Date(Date.now() + ONE_DAY),
   });
+
   res.cookie('sessionId', session._id, {
     httpOnly: true,
+    secure: true,
+    sameSite: 'None',
     expires: new Date(Date.now() + ONE_DAY),
   });
 };

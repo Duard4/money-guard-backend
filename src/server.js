@@ -34,10 +34,7 @@ export const setupServer = () => {
   );
   app.use(
     cors({
-      origin: [
-        'http://localhost:5173',
-        'https://money-guard-backend-lnfk.onrender.com',
-      ],
+      origin: true,
       credentials: true,
     }),
   );
