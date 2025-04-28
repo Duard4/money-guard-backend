@@ -11,13 +11,15 @@ import {
   deleteTransactionController,
   getTransactionsController,
   getMonthlySummaryController,
+  getCategoriesController,
 } from '../controllers/transactions.js';
 import { authenticate } from '../middlewares/authenticate.js';
 import { checkTransactionAccess } from '../middlewares/checkTransactionAccess.js';
 
 const router = Router();
-router.use(authenticate);
 
+router.get('/categories', ctrlWrapper(getCategoriesController));
+router.use(authenticate);
 router.get('/', ctrlWrapper(getTransactionsController));
 router.post(
   '/',
@@ -36,5 +38,4 @@ router.delete(
   ctrlWrapper(deleteTransactionController),
 );
 router.get('/summary', ctrlWrapper(getMonthlySummaryController));
-
 export default router;

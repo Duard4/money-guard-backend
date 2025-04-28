@@ -4,6 +4,7 @@ import {
   getTransactions,
   updateTransaction,
   getMonthlySummary,
+  getCategories,
 } from '../services/transactions.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
@@ -72,5 +73,15 @@ export const getMonthlySummaryController = async (req, res) => {
     status: 200,
     message: 'Successfully fetched monthly summary!',
     data: summary,
+  });
+};
+
+export const getCategoriesController = async (req, res) => {
+  const { type } = req.body;
+  const categories = await getCategories(type);
+  res.json({
+    status: 200,
+    message: `Successfully fetched categories of type ${type}`,
+    data: categories,
   });
 };

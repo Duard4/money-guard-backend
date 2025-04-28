@@ -2,6 +2,7 @@ import { TransactionsCollection } from '../db/models/transaction.js';
 import { SORT_ORDER } from '../constants/index.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import { UsersCollection } from '../db/models/user.js';
+import createHttpError from 'http-errors';
 
 /**
  * getTransactions retrieves transactions from the database with pagination and sorting.
@@ -255,4 +256,24 @@ export const getMonthlySummary = async (userId, month, year) => {
     totalExpense: summary.totalExpense,
     balance,
   };
+};
+
+export const getCategories = (type) => {
+  const expenses = [
+    'Main expenses',
+    'Products',
+    'Car',
+    'Self care',
+    'Child care',
+    'Household products',
+    'Education',
+    'Leisure',
+    'Other expenses',
+    'Entertainment',
+  ];
+  return type === 'income'
+    ? ['Incomes']
+    : type === 'expense'
+    ? expenses
+    : [...expenses, 'Incomes'];
 };
