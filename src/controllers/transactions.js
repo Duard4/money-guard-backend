@@ -77,7 +77,7 @@ export const getMonthlySummaryController = async (req, res) => {
 };
 
 export const getCategoriesController = async (req, res) => {
-  const { type } = req.body;
+  const { type } = req.query;
   const categories = await getCategories(type);
   res.json({
     status: 200,
