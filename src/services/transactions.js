@@ -87,9 +87,6 @@ export const createTransaction = async (userId, payload) => {
     throw new Error('User not found');
   }
 
-  if (payload.type === 'expense' && user.balance < payload.sum) {
-    throw new Error('Not enough balance');
-  }
   if (payload.type === 'income' && payload.category !== 'Incomes') {
     throw new Error('Invalid category for income type');
   }
