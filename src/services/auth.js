@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
 import { UsersCollection } from '../db/models/user.js';
 import { randomBytes } from 'crypto';
-import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/index.js';
+import { TWO_HOURS, ONE_DAY } from '../constants/index.js';
 import { SessionsCollection } from '../db/models/session.js';
 
 export const registerUser = async (payload) => {
@@ -36,7 +36,7 @@ export const loginUser = async (payload) => {
     userId: user._id,
     accessToken,
     refreshToken,
-    accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
+    accessTokenValidUntil: new Date(Date.now() + TWO_HOURS),
     refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
   });
 };
@@ -52,7 +52,7 @@ const createSession = () => {
   return {
     accessToken,
     refreshToken,
-    accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
+    accessTokenValidUntil: new Date(Date.now() + TWO_HOURS),
     refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
   };
 };

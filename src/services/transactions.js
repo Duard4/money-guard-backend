@@ -2,7 +2,7 @@ import { TransactionsCollection } from '../db/models/transaction.js';
 import { SORT_ORDER } from '../constants/index.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import { UsersCollection } from '../db/models/user.js';
-import createHttpError from 'http-errors';
+import mongoose from 'mongoose';
 
 /**
  * getTransactions retrieves transactions from the database with pagination and sorting.
@@ -93,20 +93,33 @@ export const createTransaction = async (userId, payload) => {
   if (payload.type === 'expense' && payload.category === 'Incomes') {
     throw new Error('Invalid category for expense type');
   }
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-  const transaction = await TransactionsCollection.create({
-    ...payload,
-    userId,
-  });
+  const balanceChange = payload.type === 'income' ? payload.sum : -payload.sum;
+  const newBalance = user.balance + balanceChange;
 
   await UsersCollection.updateOne(
     { _id: userId },
     {
-      $inc: { balance: payload.type === 'income' ? payload.sum : -payload.sum },
+      $inc: { balance: balanceChange },
     },
   );
-
-  return transaction;
+  const transaction = await TransactionsCollection.create(
+    [
+      {
+        ...payload,
+        userId,
+      },
+    ],
+    { session },
+  );
+  await session.commitTransaction();
+  const cleanTransaction = transaction[0].toObject();
+  return {
+    ...cleanTransaction,
+    balanceAfter: newBalance,
+  };
 };
 
 /**
@@ -130,7 +143,8 @@ export const updateTransaction = async (userId, transactionId, payload) => {
       throw new Error('Expense transactions cannot use "Incomes" category');
     }
   }
-
+  const session = await mongoose.startSession();
+  session.startTransaction();
   const newType = payload.type || transaction.type;
   const newSum = payload.sum !== undefined ? payload.sum : transaction.sum;
 
@@ -138,10 +152,7 @@ export const updateTransaction = async (userId, transactionId, payload) => {
   balanceChange +=
     transaction.type === 'income' ? -transaction.sum : transaction.sum;
   balanceChange += newType === 'income' ? newSum : -newSum;
-
-  if (user.balance + balanceChange < 0) {
-    throw new Error('Insufficient balance for this transaction update');
-  }
+  const newBalance = user.balance + balanceChange;
 
   await UsersCollection.updateOne(
     { _id: userId },
@@ -153,8 +164,9 @@ export const updateTransaction = async (userId, transactionId, payload) => {
     { $set: payload },
     { new: true },
   );
+  await session.commitTransaction();
 
-  return updatedTransaction;
+  return { ...updatedTransaction.toObject(), balanceAfter: newBalance };
 };
 
 export const deleteTransaction = async (userId, transactionId) => {
@@ -171,17 +183,30 @@ export const deleteTransaction = async (userId, transactionId) => {
     throw new Error('Transaction not found');
   }
 
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  const balanceChange =
+    transaction.type === 'income' ? -transaction.sum : transaction.sum;
+
+  const newBalance = user.balance + balanceChange;
+
   await UsersCollection.updateOne(
     { _id: userId },
-    {
-      $inc: {
-        balance:
-          transaction.type === 'income' ? -transaction.sum : transaction.sum,
-      },
-    },
+    { $inc: { balance: balanceChange } },
+    { session },
   );
 
-  return await TransactionsCollection.deleteOne({ _id: transactionId });
+  await TransactionsCollection.deleteOne({ _id: transactionId }, { session });
+
+  await session.commitTransaction();
+
+  return {
+    _id: transactionId,
+    userId: user._id,
+    balanceAfter: newBalance,
+    deleted: true,
+  };
 };
 
 /**

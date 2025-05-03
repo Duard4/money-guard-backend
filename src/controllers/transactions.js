@@ -58,9 +58,11 @@ export const updateTransactionController = async (req, res) => {
 export const deleteTransactionController = async (req, res) => {
   const userId = req.user._id;
   const { transactionId } = req.params;
-  await deleteTransaction(userId, transactionId);
-
-  res.status(204).send();
+  const msg = await deleteTransaction(userId, transactionId);
+  res.json({
+    status: 204,
+    ...msg,
+  });
 };
 
 export const getMonthlySummaryController = async (req, res) => {
